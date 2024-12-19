@@ -1,21 +1,23 @@
 ## A Genome Annotation Pipeline Combining MAKER and Liftoff
 
 ### Maker Pipeline
++ Prepare RNA-seq files in the same folder
 ```
-##Prepare RNA-seq files in the same folder
 ls * > list
 sed -i "s/_trim_1.fq.gz//g" list
 sed -i "s/_trim_2.fq.gz//g" list  
 sort -n list | uniq > list2  ##recover rna list
 awk '{print $0 "_hap1.bam"}' list2 > list_bam1
 awk '{print $0 "_hap2.bam"}' list2 > list_bam2  ##create bam list
+```
 
-##pasa preprocessing
++ pasa preprocessing
+```
 for i in $(cat ./rna/list2);do hisat2 --dta -p 64 -x ./genome_hap1.fa  -1 ./rna/${i}_trim_1.fq.gz -2 ./rna/${i}_trim_2.fq.gz | samtools sort -@ 64 > ${i}_hap1.bam; done
 samtools merge -@ 64  hap1.bam $(cat ./rna/list_bam1)
 stringtie -p 64 -o hap1.gtf hap1.bam
 gffread hap1.gtf -g genome_hap1.fa -w transcripts_hap1.fa
-
+```
 ##running pasa
 ~/PASApipeline-pasa-v2.5.2/Launch_PASA_pipeline.pl -c alignAssembly.config -C -R -g ../genome_hap1.fa --ALIGNERS minimap2 -t ../transcripts_hap1.fa  --CPU 64
 ~/PASApipeline-pasa-v2.5.2/Launch_PASA_pipeline.pl -c alignAssembly.config -C -R -g ../genome_hap1.fa --ALIGNERS minimap2 -t ../transcripts_hap1.fa  --CPU 1
