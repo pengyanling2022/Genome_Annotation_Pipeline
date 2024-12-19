@@ -18,15 +18,13 @@ samtools merge -@ 64  hap1.bam $(cat ./rna/list_bam1)
 stringtie -p 64 -o hap1.gtf hap1.bam
 gffread hap1.gtf -g genome_hap1.fa -w transcripts_hap1.fa
 ```
-##running pasa
++ running pasa
+```
 ~/PASApipeline-pasa-v2.5.2/Launch_PASA_pipeline.pl -c alignAssembly.config -C -R -g ../genome_hap1.fa --ALIGNERS minimap2 -t ../transcripts_hap1.fa  --CPU 64
 ~/PASApipeline-pasa-v2.5.2/Launch_PASA_pipeline.pl -c alignAssembly.config -C -R -g ../genome_hap1.fa --ALIGNERS minimap2 -t ../transcripts_hap1.fa  --CPU 1
-
-###runing maker
-source activate maker2
-export LIBDIR=~/miniconda3/envs/maker2/share/RepeatMasker/Libraries
-mpiexec -n 64 maker -base species_rnd1 -fix_nucleotides maker_opts.round1.ctl maker_bopts.ctl maker_exe.ctl
-
+```
++ runing maker
+```
 source activate maker2
 export LIBDIR=~/miniconda3/envs/maker2/share/RepeatMasker/Libraries
 mpiexec -n 64 maker -base species_rnd1 -fix_nucleotides maker_opts.round1.ctl maker_bopts.ctl maker_exe.ctl
@@ -36,8 +34,8 @@ sp=Chardonnay
 name=CH1
 hap=hap1
 
-source /public/home/wwr0530/software/miniconda3/bin/activate maker2
-cd /public/home/wwr0530/anno/${sp}/maker/${hap}/species_rnd1.maker.output
+source activate maker2
+cd ~/${sp}/maker/${hap}/species_rnd1.maker.output
 gff3_merge -s -d species_rnd1_master_datastore_index.log > species_rnd1.all.maker.gff
 fasta_merge -d species_rnd1_master_datastore_index.log
 gff3_merge -n -s -d species_rnd1_master_datastore_index.log > species_rnd1.all.maker.noseq.gff
