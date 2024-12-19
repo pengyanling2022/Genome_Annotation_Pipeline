@@ -1,1 +1,5 @@
-# Genome_Annotation_Pipeline
+# A Genome Annotation Pipeline Combining MAKER and Liftoff
+## Maker Pipeline
+### Step 1
+
+Put all the 
