@@ -2,7 +2,7 @@
 
 ### Maker Pipeline
 ```
-## Step 1 put all the RNA-seq data in one folder
+## Step 1. put all the RNA-seq data in one folder
 ls * > list
 sed -i "s/1.fq.gz//g" list
 sed -i "s/2.fq.gz//g" list  
