@@ -1,6 +1,6 @@
 ## A Genome Annotation Pipeline Combining MAKER and Liftoff
 
-### Maker Pipeline
+### [Maker Pipeline from Yandell lab](https://github.com/Yandell-Lab/maker)
 + Prepare RNA-seq files in the same folder
 ```
 ls * > list
