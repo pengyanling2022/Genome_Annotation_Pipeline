@@ -20,7 +20,7 @@ gffread hap1.gtf -g genome_hap1.fa -w transcripts_hap1.fa
 ~/PASApipeline-pasa-v2.5.2/Launch_PASA_pipeline.pl -c alignAssembly.config -C -R -g ../genome_hap1.fa --ALIGNERS minimap2 -t ../transcripts_hap1.fa  --CPU 64
 ~/PASApipeline-pasa-v2.5.2/Launch_PASA_pipeline.pl -c alignAssembly.config -C -R -g ../genome_hap1.fa --ALIGNERS minimap2 -t ../transcripts_hap1.fa  --CPU 1
 
-
+###runing maker
 source activate maker2
 export LIBDIR=~/miniconda3/envs/maker2/share/RepeatMasker/Libraries
 mpiexec -n 64 maker -base species_rnd1 -fix_nucleotides maker_opts.round1.ctl maker_bopts.ctl maker_exe.ctl
@@ -46,7 +46,6 @@ bedtools getfasta -fi ${genome} -bed - -fo species_rnd1.all.maker.transcripts100
 awk '{ if ($2 == "est2genome") print $0 }' species_rnd1.all.maker.noseq.gff > species_rnd1.all.maker.est2genome.gff
 awk '{ if ($2 == "protein2genome") print $0}' species_rnd1.all.maker.noseq.gff > speices_rnd1.all.maker.protein2genome.gff
 awk '{ if ($2 ~ "repeat") print $0}' speices_rnd1.all.maker.noseq.gff > speices_rnd1.all.maker.repeats.gff
-
 
 cd ~/${sp}/maker/${hap}/species_rnd1.maker.output
 mkdir snap
