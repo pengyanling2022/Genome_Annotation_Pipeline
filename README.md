@@ -1,5 +1,5 @@
-# A Genome Annotation Pipeline Combining MAKER and Liftoff
-## Maker Pipeline
-### Step 1
+## A Genome Annotation Pipeline Combining MAKER and Liftoff
+### Maker Pipeline
+#### Step 1
 
-Put all the 
+
