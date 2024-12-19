@@ -1,6 +1,6 @@
 ## A Genome Annotation Pipeline Combining MAKER and Liftoff
 
-### [Maker Pipeline from Yandell lab](https://github.com/Yandell-Lab/maker)
+### [Maker Pipeline (Holt et al. 2011)](https://github.com/Yandell-Lab/maker)
 + Prepare RNA-seq files in the same folder
 ```
 ls * > list
@@ -74,8 +74,45 @@ mv ${name}_rnd1.gb.test ${name}_rnd1.gb.evaluation
 augutus --species=${name}_rnd1 ${name}_rnd1.gb.evaluation >& first_evaluate.out
 grep -A 22 Evaluation first_evaluate.out
 randomSplit.pl ${name}_rnd1.gb 2000
-optimize_augustus.pl --species=${name}_rnd1 --kfold=24 --cpus=64 --onlytrain=${name}_rnd1.gb.train ${name}_rnd1.gb.test
+optimize_augustus.pl --species=${name}_rnd1 --kfold=24 --cpus=64 --onlytrain=${name}_rnd1.gb.train
+${name}_rnd1.gb.test
 etraining --species=${name}_rnd1 ${name}_rnd1.gb
 augustus --species=${name}_rnd1 ${name}_rnd1.gb.evalutation >& second_evaluate.out
 grep -A 22 Evaluation second_evaluate.out
 ```
+### [Liftoff Pipeline (Shumate et al. 2020)](https://github.com/agshumate/Liftoff)
++running liftoff
+```
+source activate liftoff
+liftoff -g PN_T2T.gff3 CH_hap1.fa PN_T2T.fa -o CH_hap1.gff3
+```
+
+### Combing MAKER and Liftoff results
++ extract genes based on liftoff
+```
+ID1=L_CH_hap1
+awk '$3 == "gene" {print $1"\t"$4"\t"$5"\t"$9}' $ID1.gff3 | sed 's/;.*//;s/ID=//' > $ID1.bed
+```
++ extract genes based on maker
+```
+ID2=M_CH_hap1
+awk '$3 == "gene" {print $1"\t"$4"\t"$5"\t"$9}' $ID2.gff| sed 's/;.*//;s/ID=//' > $ID2.bed
+```
++ combine the genes and remove the redudant information
+```
+ID3=hap1
+bedtools intersect -a $ID1.bed -b $ID2.bed -v >  $ID3.bed
+awk '{print $0"\t"($3-$2)}' $ID3.bed > $ID3.bed2
+cut -f 4 $ID3.bed2 >addlist1.txt
+grep -f addlist1.txt $ID1.gff3 | grep -v "#" > ${ID3}_add.gff3
+cat $ID2.gff ${ID3}_add.gff3 > $ID3.final.gff3
+awk '$3 == "gene" ||$3 == "mRNA"|| $3 == "exon" || $3 == "five_prime_UTR" || $3 == "three_prime_UTR" || $3 == "CDS"' $ID3.final.gff3| sed 's/Liftoff/\./g'|sed 's/Maker/\./g' > $ID3.final1.gff3
+source activate py3
+gff3_sort -g $ID3.final1.gff3 -og $ID3.sorted.gff3
+python3 filter.py $ID3.sorted.gff3 $ID3.filter.gff3
+python3 rename.py -g $ID3.filter.gff3 -c key1.txt -p $ID3
+gff3_sort -g $ID3.rename.gff3 -og $ID3.rename.sorted.gff3
+
+rm addlist1.txt rmlist1.txt ${ID3}_rm.gff3 $ID3.final.gff3  ${ID3}_add.gff3 $ID3.bed2 $ID3.bed $ID3.final1.gff3 $ID3.sorted.gff3 $ID3.filter.gff3 $ID3.filter.sorted.gff3 $ID3.rename.gff3
+```
+
