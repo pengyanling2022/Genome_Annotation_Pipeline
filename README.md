@@ -23,7 +23,7 @@ gffread hap1.gtf -g genome_hap1.fa -w transcripts_hap1.fa
 ~/PASApipeline-pasa-v2.5.2/Launch_PASA_pipeline.pl -c alignAssembly.config -C -R -g ../genome_hap1.fa --ALIGNERS minimap2 -t ../transcripts_hap1.fa  --CPU 64
 ~/PASApipeline-pasa-v2.5.2/Launch_PASA_pipeline.pl -c alignAssembly.config -C -R -g ../genome_hap1.fa --ALIGNERS minimap2 -t ../transcripts_hap1.fa  --CPU 1
 ```
-+ runing maker
++ runing maker (two runs)
 ```
 source activate maker2
 export LIBDIR=~/miniconda3/envs/maker2/share/RepeatMasker/Libraries
@@ -80,8 +80,9 @@ etraining --species=${name}_rnd1 ${name}_rnd1.gb
 augustus --species=${name}_rnd1 ${name}_rnd1.gb.evalutation >& second_evaluate.out
 grep -A 22 Evaluation second_evaluate.out
 ```
+
 ### [Liftoff Pipeline (Shumate et al. 2020)](https://github.com/agshumate/Liftoff)
-+running liftoff
++ running liftoff
 ```
 source activate liftoff
 liftoff -g PN_T2T.gff3 CH_hap1.fa PN_T2T.fa -o CH_hap1.gff3
